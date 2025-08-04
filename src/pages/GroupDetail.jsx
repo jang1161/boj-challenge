@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 import TodaySolved from '../components/TodaySolved'
+import PunishmentInfo from '../components/PunishmentInfo'
+import GroupInfo from '../components/GroupInfo'
+import MemberList from '../components/MemberList'
 
 export default function GroupDetail() {
 	const { groupId } = useParams()
@@ -125,74 +128,13 @@ export default function GroupDetail() {
 					)}
 				</div>
 
-				{/* 그룹 정보 */}
-				<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-8">
-					<div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
-						<div>
-							<span className="text-gray-600">그룹원 수</span>
-							<p className="font-medium">{members.length}명</p>
-						</div>
-						{group.password && (
-							<div>
-								<span className="text-gray-600">비밀번호</span>
-								<p className="font-medium">설정됨</p>
-							</div>
-						)}
-						{group.rest_days && group.rest_days.length > 0 && (
-							<div>
-								<span className="text-gray-600">쉬는 요일</span>
-								<p className="font-medium">{group.rest_days.join(', ')}</p>
-							</div>
-						)}
-						{group.penalty_reset_day && (
-							<div>
-								<span className="text-gray-600">벌칙 초기화</span>
-								<p className="font-medium">{group.penalty_reset_day}</p>
-							</div>
-						)}
-						{owner && (
-							<div>
-								<span className="text-gray-600">그룹장</span>
-								<p className="font-medium">{owner.nickname}</p>
-							</div>
-						)}
-					</div>
-				</div>
+				<GroupInfo group={group} members={members} owner={owner} />
+
+				<PunishmentInfo groupId={groupId} />
 
 				<TodaySolved members={members} />
 
-				{/* 그룹원 목록 */}
-				<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-8">
-					<h2 className="text-xl font-semibold text-gray-900 mb-4">그룹원 목록</h2>
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-						{members.map((member) => (
-							<div
-								key={member.user_id}
-								className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
-								onClick={() => navigate(`/users/${member.user_id}`)}
-							>
-								<div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-									<span className="text-blue-800 font-semibold text-xs">
-										{member.profiles?.nickname?.charAt(0).toUpperCase() || '?'}
-									</span>
-								</div>
-								<div className="min-w-0 flex-1">
-									<div className="flex items-center gap-1">
-										<p className="font-medium text-gray-900 text-sm truncate">
-											{member.profiles?.nickname || '닉네임 없음'}
-										</p>
-										{member.user_id === group.owner && (
-											<span className="text-xs text-yellow-600 font-medium">👑</span>
-										)}
-									</div>
-									<p className="text-xs text-gray-500 truncate">
-										{member.profiles?.boj_id ? `백준ID: ${member.profiles.boj_id}` : '백준 ID 없음'}
-									</p>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
+				<MemberList members={members} group={group} />
 			</div>
 		</div>
 	)

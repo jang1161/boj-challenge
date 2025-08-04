@@ -21,12 +21,16 @@ export default function TodaySolved({ members }) {
 					// fetchTodaySolvedProblems에서 이미 배열을 반환하므로 그대로 사용
 					map[member.user_id] = solved
 					if (solved.length > 0) {
-						console.log("오늘완료")
-						await supabase
+						const { data, error } = await supabase
 							.from('profiles')
-							.update({ todaySolved: true })
+							.update({ today_solved: true })
 							.eq('id', member.user_id);
 
+						if (error) {
+							console.error('Supabase update error:', error);
+						} else {
+							console.log(member.user_id, 'Update 성공:', data);
+						}
 					}
 				} catch (error) {
 					console.error(`Error fetching for ${bojId}:`, error)
@@ -55,21 +59,20 @@ export default function TodaySolved({ members }) {
 						<div key={member.user_id} className="bg-gray-50 rounded p-3">
 							<div className="font-medium text-gray-900 mb-2">{nickname}</div>
 							<div className="text-sm text-gray-700">
-								{solved === null
+								{solved == null || solved.length == 0
 									? '아직 안 풀었어요'
-									: solved.length > 0
-										? solved.map((pid) => (
-											<a
-												key={pid}
-												href={`https://www.acmicpc.net/problem/${pid}`}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="inline-block text-blue-600 hover:underline mr-2 mb-1"
-											>
-												#{pid}
-											</a>
-										))
-										: '백준 ID 없음'}
+									: solved.map((pid) => (
+										<a
+											key={pid}
+											href={`https://www.acmicpc.net/problem/${pid}`}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="inline-block text-blue-600 hover:underline mr-2 mb-1"
+										>
+											#{pid}
+										</a>
+									))
+								}
 							</div>
 						</div>
 					)

@@ -117,7 +117,6 @@ export const fetchRecentProblems = async (bojId, count = 10) => {
 };
 
 // 오늘 푼 문제 목록 불러오기 (userId = 백준ID)
-// 오늘 푼 문제 목록 불러오기 (userId = 백준ID)
 export const fetchTodaySolvedProblems = async (userId) => {
 	try {
 		const res = await fetch(`/api/today-problems?user=${userId}`);
