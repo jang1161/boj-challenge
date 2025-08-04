@@ -28,8 +28,6 @@ export default function TodaySolved({ members }) {
 
 						if (error) {
 							console.error('Supabase update error:', error);
-						} else {
-							console.log(member.user_id, 'Update 성공:', data);
 						}
 					}
 				} catch (error) {

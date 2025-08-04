@@ -16,7 +16,7 @@ async function updatePunishments() {
     .neq('today_solved', false);
   if (updateError) throw updateError;
 
-  console.log('✅ Punishments updated and todaySolved reset.');
+  console.log('Punishments updated and todaySolved reset.');
 }
 
 updatePunishments().catch((err) => {

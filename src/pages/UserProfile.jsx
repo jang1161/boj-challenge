@@ -58,7 +58,6 @@ export default function UserProfile() {
 						})
 					);
 				
-					console.log("최종 문제 목록:", problemsWithInfo);
 					setRecentProblems(problemsWithInfo);
 				} catch (error) {
 					console.error("문제 불러오기 실패:", error);
