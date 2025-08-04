@@ -22,10 +22,10 @@ export default function GroupDetail() {
 	}, [])
 
 	useEffect(() => {
-		if (groupId) {
+		if (groupId && userId) {
 			fetchGroupDetails()
 		}
-	}, [groupId])
+	}, [groupId, userId])
 
 	const fetchGroupDetails = async () => {
 		setLoading(true)
@@ -52,7 +52,7 @@ export default function GroupDetail() {
 				user_id,
 				profiles:user_id (
 					nickname,
-                    boj_id
+          boj_id
 				)
 			`)
 			.eq('group_id', groupId)
@@ -62,6 +62,8 @@ export default function GroupDetail() {
 			setLoading(false)
 			return
 		}
+		
+		setMembers(membersData)
 
 		// 로그인한 유저가 멤버인지 체크
 		if (!membersData.some(member => member.user_id === userId)) {
@@ -70,7 +72,6 @@ export default function GroupDetail() {
 			return
 		}
 
-		setMembers(membersData)
 
 		// 그룹장 정보 조회
 		if (groupData.owner) {
