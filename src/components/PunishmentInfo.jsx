@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../supabaseClient'
 
+// 특정 날짜 기준으로 그 주 월~일 구하기
 function getWeekRange(date) {
-	const day = date.getDay() // 일:0 ~ 토:6
-	const diffToMonday = (day + 6) % 7 // 월:0, 화:1, ..., 일:6
+	const day = date.getDay() // 일: 0 ~ 토: 6
+	const diffToMonday = (day + 6) % 7 // 월: 0, 화: 1, ..., 일: 6
 
 	const monday = new Date(date)
 	monday.setDate(date.getDate() - diffToMonday)
@@ -21,27 +22,28 @@ function getWeekRange(date) {
 	return { start: formatDate(monday), end: formatDate(sunday) }
 }
 
-// 0시 00분 00초
-const startOfDay = (dateStr) => {
-	const d = new Date(dateStr)
-	d.setHours(0, 0, 0, 0)
-	return d.toISOString()
-}
+// 유저별 벌칙 묶기 및 횟수, 날짜 리스트 생성
+function groupPunishmentsByUser(punishments) {
+	const grouped = {}
 
-// 23시 59분 59초
-const endOfDay = (dateStr) => {
-	const d = new Date(dateStr)
-	d.setHours(23, 59, 59, 999)
-	return d.toISOString()
-}
+	punishments.forEach((p) => {
+		if (!grouped[p.user_id]) {
+			grouped[p.user_id] = {
+				user_id: p.user_id,
+				nickname: p.profiles?.nickname || '닉네임 없음',
+				boj_id: p.profiles?.boj_id || '백준 ID 없음',
+				dates: [],
+				count: 0,
+			}
+		}
+		grouped[p.user_id].count += 1
+		// 날짜 포맷: 월/일 (예: 8/4)
+		grouped[p.user_id].dates.push(
+			new Date(p.date).toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' })
+		)
+	})
 
-
-
-function countPunishmentsByUser(punishments) {
-	return punishments.reduce((acc, p) => {
-		acc[p.user_id] = (acc[p.user_id] || 0) + 1
-		return acc
-	}, {})
+	return Object.values(grouped)
 }
 
 export default function PunishmentInfo({ groupId }) {
@@ -58,24 +60,24 @@ export default function PunishmentInfo({ groupId }) {
 			setLoading(true)
 			const today = new Date()
 
-			// 이번주 월~일
+			// 이번주: 오늘 기준
 			const thisWeek = getWeekRange(today)
 			setThisWeekRange(thisWeek)
 
-			// 지난주 월~일 (이번주 월요일에서 -7일)
-			const lastWeekMonday = new Date(thisWeek.start)
-			lastWeekMonday.setDate(lastWeekMonday.getDate() - 7)
-			const lastWeek = getWeekRange(lastWeekMonday)
+			// 지난주: 이번주 월요일 기준 -7일
+			const mondayOfThisWeek = new Date(thisWeek.start)
+			mondayOfThisWeek.setDate(mondayOfThisWeek.getDate() - 7)
+			const lastWeek = getWeekRange(mondayOfThisWeek)
 			setLastWeekRange(lastWeek)
 
 			// 지난주 벌칙 조회
 			const { data: lastData, error: lastError } = await supabase
 				.from('punishments')
-				.select('id, user_id, profiles(nickname, boj_id), inserted_at')
+				.select('id, user_id, profiles(nickname, boj_id), date')
 				.eq('group_id', groupId)
-				.gte('inserted_at', startOfDay(lastWeek.start))
-				.lte('inserted_at', endOfDay(lastWeek.end))
-				.order('inserted_at', { ascending: false })
+				.gte('date', lastWeek.start)
+				.lte('date', lastWeek.end)
+				.order('date', { ascending: false })
 
 			if (lastError) {
 				alert('지난주 벌칙 정보를 불러오는 중 오류가 발생했습니다: ' + lastError.message)
@@ -86,11 +88,11 @@ export default function PunishmentInfo({ groupId }) {
 			// 이번주 벌칙 조회
 			const { data: thisData, error: thisError } = await supabase
 				.from('punishments')
-				.select('id, user_id, profiles(nickname, boj_id), inserted_at')
+				.select('id, user_id, profiles(nickname, boj_id), date')
 				.eq('group_id', groupId)
-				.gte('inserted_at', startOfDay(thisWeek.start))
-				.lte('inserted_at', endOfDay(thisWeek.end))
-				.order('inserted_at', { ascending: false })
+				.gte('date', thisWeek.start)
+				.lte('date', thisWeek.end)
+				.order('date', { ascending: false })
 
 			if (thisError) {
 				alert('이번주 벌칙 정보를 불러오는 중 오류가 발생했습니다: ' + thisError.message)
@@ -112,9 +114,8 @@ export default function PunishmentInfo({ groupId }) {
 		)
 	}
 
-	const lastWeekCount = countPunishmentsByUser(lastWeekPunishments)
-	const thisWeekCount = countPunishmentsByUser(thisWeekPunishments)
-
+	const groupedLastWeek = groupPunishmentsByUser(lastWeekPunishments)
+	const groupedThisWeek = groupPunishmentsByUser(thisWeekPunishments)
 
 	return (
 		<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
@@ -126,26 +127,18 @@ export default function PunishmentInfo({ groupId }) {
 					<h3 className="text-lg font-semibold mb-2 text-red-600">
 						지난주 벌칙자 ({lastWeekRange?.start.replace(/-/g, '/')} - {lastWeekRange?.end.replace(/-/g, '/')})
 					</h3>
-					{lastWeekPunishments.length ? (
+					{groupedLastWeek.length ? (
 						<ul className="divide-y divide-gray-200 max-h-48 overflow-auto">
-							{lastWeekPunishments.map((p) => (
-								<li key={p.id} className="py-2 flex justify-between items-center">
+							{groupedLastWeek.map(({ user_id, nickname, boj_id, count, dates }) => (
+								<li key={user_id} className="py-2 flex justify-between items-center">
 									<div>
 										<p className="font-medium text-gray-900">
-											{p.profiles?.nickname || '닉네임 없음'}{' '}
-											<span className="text-xs text-gray-500 ml-1">
-												({p.profiles?.boj_id || '백준 ID 없음'})
-											</span>{' '}
+											{nickname}{' '}
+											<span className="text-xs text-gray-500 ml-1">({boj_id})</span>{' '}
 											<span className="text-xs text-red-600 font-semibold ml-2">
-												[{lastWeekCount[p.user_id]}회]
-											</span>
-											<span className="text-xs text-gray-400 ml-2">
-												({new Date(p.inserted_at).toLocaleDateString()})
+												[{count}회] <span className="text-xs text-gray-500 ml-1">({dates.join(', ')})</span>
 											</span>
 										</p>
-									</div>
-									<div className="text-xs text-gray-400 whitespace-nowrap">
-										{new Date(p.inserted_at).toLocaleDateString()}
 									</div>
 								</li>
 							))}
@@ -160,21 +153,16 @@ export default function PunishmentInfo({ groupId }) {
 					<h3 className="text-lg font-semibold mb-2 text-blue-600">
 						이번주 벌칙자 ({thisWeekRange?.start.replace(/-/g, '/')} - {thisWeekRange?.end.replace(/-/g, '/')})
 					</h3>
-					{thisWeekPunishments.length ? (
+					{groupedThisWeek.length ? (
 						<ul className="divide-y divide-gray-200 max-h-48 overflow-auto">
-							{thisWeekPunishments.map((p) => (
-								<li key={p.id} className="py-2 flex justify-between items-center">
+							{groupedThisWeek.map(({ user_id, nickname, boj_id, count, dates }) => (
+								<li key={user_id} className="py-2 flex justify-between items-center">
 									<div>
 										<p className="font-medium text-gray-900">
-											{p.profiles?.nickname || '닉네임 없음'}{' '}
-											<span className="text-xs text-gray-500 ml-1">
-												({p.profiles?.boj_id || '백준 ID 없음'})
-											</span>{' '}
+											{nickname}{' '}
+											<span className="text-xs text-gray-500 ml-1">({boj_id})</span>{' '}
 											<span className="text-xs text-blue-600 font-semibold ml-2">
-												[{thisWeekCount[p.user_id]}회]
-											</span>
-											<span className="text-xs text-gray-400 ml-2">
-												({new Date(p.inserted_at).toLocaleDateString()})
+												[{count}회] <span className="text-xs text-gray-500 ml-1">({dates.join(', ')})</span>
 											</span>
 										</p>
 									</div>

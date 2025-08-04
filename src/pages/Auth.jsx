@@ -5,6 +5,7 @@ import { supabase } from '../supabaseClient'
 export default function Auth() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
   const [bojId, setBojId] = useState('')
   const [nickname, setNickname] = useState('')
   const [isLogin, setIsLogin] = useState(true)
@@ -46,6 +47,8 @@ export default function Auth() {
       }
     } else {
       if (!bojId || !nickname) return alert('백준 아이디와 닉네임을 모두 입력해주세요.')
+      if (!passwordConfirm) return alert('비밀번호 확인을 입력해주세요.')
+      if (password !== passwordConfirm) return alert('비밀번호가 일치하지 않습니다.')
 
       const isDuplicate = await checkDuplicates()
       if (isDuplicate) return
@@ -96,6 +99,13 @@ export default function Auth() {
           {!isLogin && (
             <>
               <input
+                type="password"
+                placeholder="비밀번호 확인"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input
                 type="text"
                 placeholder="백준 아이디"
                 value={bojId}
@@ -104,7 +114,7 @@ export default function Auth() {
               />
               <input
                 type="text"
-                placeholder="닉네임"
+                placeholder="사용할 닉네임"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -123,7 +133,7 @@ export default function Auth() {
           className="mt-4 text-center text-blue-600 hover:underline cursor-pointer text-sm"
           onClick={() => setIsLogin(!isLogin)}
         >
-          {isLogin ? '→ 회원가입 하러가기' : '← 로그인으로 돌아가기'}
+          {isLogin ? '→ 회원가입' : '← 로그인'}
         </p>
       </div>
     </div>
