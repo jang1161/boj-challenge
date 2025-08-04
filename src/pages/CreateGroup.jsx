@@ -63,6 +63,22 @@ export default function CreateGroup() {
 
     setLoading(true)
 
+    // 사용자가 만든 그룹 수 조회
+    const { data: existingGroups, error: fetchError } = await supabase
+      .from('groups')
+      .select('id')
+      .eq('owner', userId)
+
+    if (fetchError) {
+      alert('그룹 정보를 불러오는 중 오류가 발생했습니다: ' + fetchError.message)
+      return
+    }
+
+    if (existingGroups.length >= 5) {
+      alert('그룹은 최대 5개까지만 생성할 수 있습니다.')
+      return
+    }
+
     // 그룹 생성
     const { data: newGroup, error } = await supabase
       .from('groups')
