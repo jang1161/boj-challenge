@@ -45,7 +45,7 @@ export default function UserProfile() {
 
 				try {
 					const problems = await fetchRecentProblems(profile.boj_id, 10);
-				
+
 					// 각 문제에 제목과 난이도 정보 추가
 					const problemsWithInfo = await Promise.all(
 						problems.map(async (problem) => {
@@ -57,13 +57,13 @@ export default function UserProfile() {
 							};
 						})
 					);
-				
+
 					setRecentProblems(problemsWithInfo);
 				} catch (error) {
 					console.error("문제 불러오기 실패:", error);
 					setRecentProblems([]);
 				}
-				
+
 				setProblemsLoading(false);
 			}
 
@@ -126,7 +126,17 @@ export default function UserProfile() {
 						</div>
 						<div className="flex-1">
 							<h1 className="text-2xl font-bold text-gray-900">{user.nickname}</h1>
-							<p className="text-gray-600">{user.boj_id ? `백준 ID: ${user.boj_id}` : '백준 ID 없음'}</p>
+							<p className="text-gray-600">
+								백준 ID: {user.boj_id}
+								<a
+									href={`https://www.acmicpc.net/user/${user.boj_id}`}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-blue-600 ml-2 hover:text-blue-800 text-sm"
+								>
+									[백준 페이지]
+								</a>
+							</p>
 						</div>
 					</div>
 				</div>
