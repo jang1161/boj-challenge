@@ -63,6 +63,13 @@ export default function GroupDetail() {
 			return
 		}
 
+		// 로그인한 유저가 멤버인지 체크
+		if (!membersData.some(member => member.user_id === userId)) {
+			alert('그룹에 가입되어 있지 않습니다.')
+			navigate('/')  // 홈으로 이동 혹은 원하는 페이지로 이동
+			return
+		}
+
 		setMembers(membersData)
 
 		// 그룹장 정보 조회
