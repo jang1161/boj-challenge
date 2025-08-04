@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function GroupInfo({ group, members, owner }) {
 	return (
-		<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-8">
+		<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
 			<div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
 				<div>
 					<span className="text-gray-600">그룹원 수</span>
