@@ -29,23 +29,17 @@
 ## 시작하기
 
 1. 저장소 클론  
-\`\`\`bash
 git clone https://github.com/yourusername/boj-challenge.git
 cd boj-challenge
-\`\`\`
 
 2. 의존성 설치  
-\`\`\`bash
 npm install
-\`\`\`
 
 3. 환경 변수 설정 (\`.env\`)  
 - Supabase URL 및 Key 설정  
 - 기타 필요한 API 키
 
 4. 개발 서버 실행  
-\`\`\`bash
 npm run dev
-\`\`\`
 
 ---
