@@ -16,7 +16,6 @@ export default function CreateGroup() {
   const [groupName, setGroupName] = useState('')
   const [password, setPassword] = useState('')
   const [restDays, setRestDays] = useState([])
-  const [penaltyResetDay, setPenaltyResetDay] = useState('')
   const [groupNameExists, setGroupNameExists] = useState(false)
   const [loading, setLoading] = useState(false)
   const [userId, setUserId] = useState(null)
@@ -59,7 +58,6 @@ export default function CreateGroup() {
     if (!groupName) return alert('그룹 이름을 입력하세요.')
     if (groupNameExists) return alert('이미 존재하는 그룹 이름입니다.')
     if (!userId) return alert('로그인이 필요합니다.')
-    if (!penaltyResetDay) return alert('벌칙 초기화 요일을 선택하세요.')
 
     setLoading(true)
 
@@ -71,11 +69,13 @@ export default function CreateGroup() {
 
     if (fetchError) {
       alert('그룹 정보를 불러오는 중 오류가 발생했습니다: ' + fetchError.message)
+      setLoading(false)
       return
     }
 
     if (existingGroups.length >= 5) {
       alert('그룹은 최대 5개까지만 생성할 수 있습니다.')
+      setLoading(false)
       return
     }
 
@@ -88,7 +88,7 @@ export default function CreateGroup() {
           owner: userId,
           password: password || null,
           rest_days: restDays,
-          penalty_reset_day: penaltyResetDay || null,
+          // penalty_reset_day 필드는 아예 제거
         },
       ])
       .select() // insert 후 데이터 받아오기 위해
@@ -114,11 +114,9 @@ export default function CreateGroup() {
       setGroupName('')
       setPassword('')
       setRestDays([])
-      setPenaltyResetDay('')
       navigate('/')
     }
   }
-
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
@@ -136,8 +134,9 @@ export default function CreateGroup() {
             onChange={(e) => setGroupName(e.target.value)}
             disabled={loading}
             maxLength={20}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${groupNameExists ? 'border-red-500' : 'border-gray-300'
-              }`}
+            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              groupNameExists ? 'border-red-500' : 'border-gray-300'
+            }`}
             placeholder="그룹 이름을 입력하세요 (최대 20자)"
           />
           {groupNameExists && (
@@ -179,27 +178,6 @@ export default function CreateGroup() {
               </label>
             ))}
           </div>
-        </div>
-
-        {/* 벌칙 초기화 요일 */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-1" htmlFor="penaltyResetDay">
-            벌칙 초기화 요일
-          </label>
-          <select
-            id="penaltyResetDay"
-            value={penaltyResetDay}
-            onChange={(e) => setPenaltyResetDay(e.target.value)}
-            disabled={loading}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">선택하세요</option>
-            {WEEKDAYS.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
         </div>
 
         {/* 제출 버튼 */}
