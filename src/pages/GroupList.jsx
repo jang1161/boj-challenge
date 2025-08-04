@@ -12,6 +12,7 @@ export default function GroupList({ session }) {
 	const [joinedGroupIds, setJoinedGroupIds] = useState(new Set())
 	const [loading, setLoading] = useState(false)
 	const [userId, setUserId] = useState(null)
+	const [searchTerm, setSearchTerm] = useState('')
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -19,6 +20,10 @@ export default function GroupList({ session }) {
 			if (user) setUserId(user.id)
 		})
 	}, [])
+
+	const filteredGroups = groups.filter((group) =>
+		group.name.toLowerCase().includes(searchTerm.toLowerCase())
+	)
 
 	const fetchGroupsAndMemberships = async () => {
 		setLoading(true)
@@ -241,9 +246,18 @@ export default function GroupList({ session }) {
 					color="blue"
 					emptyMessage="그룹이 없습니다."
 					emptySubMessage="첫 번째 그룹을 만들어보세요!"
+					rightElement={
+						<input
+							type="text"
+							placeholder="그룹 검색"
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+							className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+						/>
+					}
 				>
 					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-						{groups.map((group) => (
+						{filteredGroups.map((group) => (
 							<GroupCard
 								key={group.id}
 								group={group}
