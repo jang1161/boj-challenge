@@ -12,8 +12,8 @@ async function updatePunishments() {
 
   const { error: updateError } = await supabase
     .from('profiles')
-    .update({ todaySolved: false })
-    .neq('todaySolved', false);
+    .update({ today_solved: false })
+    .neq('today_solved', false);
   if (updateError) throw updateError;
 
   console.log('✅ Punishments updated and todaySolved reset.');
