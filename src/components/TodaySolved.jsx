@@ -20,16 +20,6 @@ export default function TodaySolved({ members }) {
 					const solved = await fetchTodaySolvedProblems(bojId)
 					// fetchTodaySolvedProblems에서 이미 배열을 반환하므로 그대로 사용
 					map[member.user_id] = solved
-					if (solved.length > 0) {
-						const { data, error } = await supabase
-							.from('profiles')
-							.update({ today_solved: true })
-							.eq('id', member.user_id);
-
-						if (error) {
-							console.error('Supabase update error:', error);
-						}
-					}
 				} catch (error) {
 					console.error(`Error fetching for ${bojId}:`, error)
 					map[member.user_id] = null
