@@ -37,6 +37,7 @@ async function main() {
       const res = await fetch(`https://boj-challenge.vercel.app/api/solved-yesterday?user=${encodeURIComponent(bojId)}`)
       const data = await res.json()
 
+	  console.log(`[DEBUG] ${bojId} 응답:`, data)
       const solved = data.solved
       console.log(`[${bojId}] 어제 풀었는지: ${solved}`)
 
