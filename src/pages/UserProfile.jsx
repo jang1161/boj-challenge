@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../supabaseClient'
 import { fetchUserInfo, fetchRecentProblems, getLevelColor, getLevelName, fetchProblemInfo } from '../utils/bojApi'
+import RecentProblems from '../components/RecentProblems'
+
 
 export default function UserProfile() {
 	const { userId } = useParams()
@@ -117,7 +119,7 @@ export default function UserProfile() {
 				</button>
 
 				{/* 사용자 정보 + 백준 정보  */}
-				<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+				<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4">
 					<div className="flex items-center gap-4 mb-4">
 						<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
 							<span className="text-blue-800 font-semibold text-2xl">
@@ -166,34 +168,7 @@ export default function UserProfile() {
 				{user.boj_id && (
 					<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
 						<h2 className="text-xl font-semibold text-gray-900 mb-4">최근 푼 10문제</h2>
-						{problemsLoading ? (
-							<div className="text-center py-8">
-								<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-								<p className="text-sm text-gray-600 mt-2">최근 문제를 불러오는 중...</p>
-							</div>
-						) : recentProblems.length > 0 ? (
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-								{recentProblems.map((item, index) => (
-									<div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-										<div className="flex items-center gap-3">
-											<span className="text-sm text-gray-500">#{item.problemId}</span>
-											<div>
-												<p className="font-medium text-gray-900">{item.title}</p>
-											</div>
-										</div>
-										<span className={`text-sm font-medium ${getLevelColor(item.level)}`}>
-											{getLevelName(item.level)}
-										</span>
-									</div>
-								))}
-
-
-							</div>
-						) : (
-							<div className="text-center py-8">
-								<p className="text-gray-600">최근 푼 문제가 없습니다.</p>
-							</div>
-						)}
+						<RecentProblems problems={recentProblems} loading={problemsLoading} />
 					</div>
 				)}
 			</div>

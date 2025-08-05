@@ -32,7 +32,7 @@ export default function TodaySolved({ members }) {
 	}, [members])
 
 	if (loading) {
-		return <p className="text-center text-gray-500 py-4">그룹원별 오늘 푼 문제를 불러오는 중...</p>
+		return <p className="text-center text-gray-500 py-4">오늘 푼 문제 불러오는 중...</p>
 	}
 
 	return (
