@@ -124,9 +124,14 @@ export default function PunishmentInfo({ groupId }) {
 			<div className="flex gap-6">
 				{/* 지난주 벌칙자 */}
 				<section className="flex-1">
-					<h3 className="text-lg font-semibold mb-2 text-red-600">
-						지난주 벌칙자 ({lastWeekRange?.start.replace(/-/g, '/')} - {lastWeekRange?.end.replace(/-/g, '/')})
-					</h3>
+					<div className="mb-2 flex items-baseline gap-2">
+						<h3 className="text-lg font-semibold text-red-600">
+							지난주 벌칙자
+						</h3>
+						<p className="text-gray-500 text-sm">
+							({lastWeekRange?.start.replace(/-/g, '/')} - {lastWeekRange?.end.replace(/-/g, '/')})
+						</p>
+					</div>
 					{groupedLastWeek.length ? (
 						<ul className="divide-y divide-gray-200 max-h-48 overflow-auto">
 							{groupedLastWeek.map(({ user_id, nickname, boj_id, count, dates }) => (
@@ -150,9 +155,14 @@ export default function PunishmentInfo({ groupId }) {
 
 				{/* 이번주 벌칙자 */}
 				<section className="flex-1">
-					<h3 className="text-lg font-semibold mb-2 text-blue-600">
-						이번주 벌칙자 ({thisWeekRange?.start.replace(/-/g, '/')} - {thisWeekRange?.end.replace(/-/g, '/')})
-					</h3>
+					<div className="mb-2 flex items-baseline gap-2">
+						<h3 className="text-lg font-semibold text-blue-600">
+							이번주 벌칙자
+						</h3>
+						<p className="text-gray-500 text-sm">
+							({thisWeekRange?.start.replace(/-/g, '/')} - {thisWeekRange?.end.replace(/-/g, '/')})
+						</p>
+					</div>
 					{groupedThisWeek.length ? (
 						<ul className="divide-y divide-gray-200 max-h-48 overflow-auto">
 							{groupedThisWeek.map(({ user_id, nickname, boj_id, count, dates }) => (
