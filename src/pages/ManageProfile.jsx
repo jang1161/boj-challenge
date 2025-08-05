@@ -17,12 +17,13 @@ export default function ManageProfile() {
 				// 닉네임 불러오기
 				const { data, error } = await supabase
 					.from('profiles')
-					.select('nickname')
+					.select('nickname, avatar_url')
 					.eq('id', user.id)
 					.single()
 
 				if (!error && data) {
 					setNickname(data.nickname || '')
+					setUser((prev) => ({ ...prev, avatar_url: data.avatar_url }))
 				}
 			} else {
 				navigate('/login')
@@ -34,7 +35,7 @@ export default function ManageProfile() {
 		if (!file || !user) return
 
 		const fileExt = file.name.split('.').pop()
-		const filePath = `${user.id}/avatar.${fileExt}`		
+		const filePath = `${user.id}/avatar.${fileExt}`
 
 		const { error: uploadError } = await supabase.storage
 			.from('avatars')
@@ -55,8 +56,39 @@ export default function ManageProfile() {
 			.update({ avatar_url: publicUrlData.publicUrl })
 			.eq('id', user.id)
 
+		// 업데이트된 avatar_url을 상태에도 반영
+		setUser((prev) => ({ ...prev, avatar_url: publicUrlData.publicUrl }))
+
 		alert('프로필 이미지가 업데이트되었습니다.')
 	}
+
+	const handleDeleteAvatar = async () => {
+		if (!user) return
+		const filePath = user.avatar_url?.split('/').slice(-2).join('/') // 'userId/avatar.ext'
+
+		const { error: removeError } = await supabase.storage
+			.from('avatars')
+			.remove([filePath])
+
+		if (removeError) {
+			alert('삭제 실패: ' + removeError.message)
+			return
+		}
+
+		const { error: updateError } = await supabase
+			.from('profiles')
+			.update({ avatar_url: null })
+			.eq('id', user.id)
+
+		if (updateError) {
+			alert('프로필 정보 업데이트 실패: ' + updateError.message)
+			return
+		}
+
+		setUser({ ...user, avatar_url: null })
+		alert('프로필 이미지가 삭제되었습니다.')
+	}
+
 
 	const handleSaveNickname = async () => {
 		if (!user) return
@@ -143,53 +175,83 @@ export default function ManageProfile() {
 				<div className="bg-white border rounded-lg shadow-md p-6">
 					<h2 className="text-2xl font-bold mb-4 text-center">프로필 설정</h2>
 
+					{/* 프로필 이미지 및 업로드 */}
+					<div className="mb-6 flex flex-col items-center gap-4">
+						{user?.avatar_url ? (
+							<img
+								src={user.avatar_url}
+								alt="프로필 이미지"
+								className="w-48 h-48 rounded-full object-cover border border-gray-300"
+							/>
+						) : (
+							<div className="w-48 h-48 bg-blue-100 rounded-full flex items-center justify-center">
+								<span className="text-blue-800 font-semibold text-5xl">
+									{nickname?.charAt(0).toUpperCase() || '?'}
+								</span>
+							</div>
+						)}
+
+						<div className="w-full">
+							<label className="block text-sm font-medium text-gray-700 mb-1">프로필 이미지 업로드</label>
+							<input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
+							<div className="flex gap-2 mt-2">
+								<button
+									onClick={handleUpload}
+									className="flex-1 text-sm px-3 py-2 bg-sky-500 text-white rounded-md hover:bg-sky-500"
+								>
+									업로드
+								</button>
+								{user?.avatar_url && (
+									<button
+										onClick={handleDeleteAvatar}
+										className="text-sm px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+									>
+										삭제
+									</button>
+								)}
+							</div>
+						</div>
+					</div>
+
 					{/* 닉네임 수정 */}
 					<div className="mb-4">
 						<label className="block text-sm font-medium text-gray-700 mb-1">닉네임</label>
-						<input
-							type="text"
-							value={nickname}
-							onChange={(e) => setNickname(e.target.value)}
-							className="w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-						/>
-						<button
-							onClick={handleSaveNickname}
-							disabled={saving}
-							className="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-						>
-							{saving ? '저장 중...' : '닉네임 저장'}
-						</button>
-					</div>
-
-					{/* 프로필 이미지 업로드 */}
-					<div className="mb-4">
-						<label className="block text-sm font-medium text-gray-700 mb-1">프로필 이미지 업로드</label>
-						<input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
-						<button
-							onClick={handleUpload}
-							className="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-						>
-							업로드
-						</button>
+						<div className="flex gap-2 items-center">
+							<input
+								type="text"
+								value={nickname}
+								onChange={(e) => setNickname(e.target.value)}
+								className="flex-1 border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+							/>
+							<button
+								onClick={handleSaveNickname}
+								disabled={saving}
+								className="text-sm px-3 py-1.5 bg-sky-500 text-white rounded-md hover:bg-sky-500 disabled:opacity-50"
+							>
+								{saving ? '저장 중' : '저장'}
+							</button>
+						</div>
 					</div>
 
 					<hr className="my-4" />
 
-					<button
-						onClick={handleLogout}
-						className="w-full bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 mb-2"
-					>
-						로그아웃
-					</button>
-
-					<button
-						onClick={handleDeleteAccount}
-						className="w-full bg-red-100 text-red-700 py-2 rounded-lg hover:bg-red-200"
-					>
-						회원 탈퇴
-					</button>
+					<div className="flex flex-col gap-2">
+						<button
+							onClick={handleLogout}
+							className="w-full bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200"
+						>
+							로그아웃
+						</button>
+						<button
+							onClick={handleDeleteAccount}
+							className="w-full bg-red-100 text-red-700 py-2 rounded-lg hover:bg-red-200"
+						>
+							회원 탈퇴
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	)
+
 }
