@@ -19,9 +19,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: |
-          npm install
-          npm install dotenv
+        run: npm install
 
 
       - name: Run update script
