@@ -36,8 +36,8 @@ export default function TodaySolved({ members }) {
 	}
 
 	return (
-		<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
-			<h3 className="text-lg font-semibold text-gray-900 mb-4">오늘 푼 문제</h3>
+		<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-4">
+			<h3 className="text-xl font-semibold text-gray-900 mb-4">오늘 푼 문제</h3>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-60 overflow-y-auto">
 				{members.map((member) => {
 					const nickname = member.profiles?.nickname || '닉네임 없음'

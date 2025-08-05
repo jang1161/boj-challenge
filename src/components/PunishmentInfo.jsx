@@ -118,7 +118,7 @@ export default function PunishmentInfo({ groupId }) {
 	const groupedThisWeek = groupPunishmentsByUser(thisWeekPunishments)
 
 	return (
-		<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4">
+		<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-4">
 			<h2 className="text-xl font-semibold text-gray-900 mb-4">벌칙 현황</h2>
 
 			<div className="flex gap-6">
