@@ -116,9 +116,9 @@ export default function UserProfile() {
 					뒤로가기
 				</button>
 
-				{/* 사용자 정보 */}
+				{/* 사용자 정보 + 백준 정보  */}
 				<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-					<div className="flex items-center gap-4">
+					<div className="flex items-center gap-4 mb-4">
 						<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
 							<span className="text-blue-800 font-semibold text-2xl">
 								{user.nickname?.charAt(0).toUpperCase() || '?'}
@@ -139,12 +139,8 @@ export default function UserProfile() {
 							</p>
 						</div>
 					</div>
-				</div>
 
-				{/* 백준 정보 */}
-				{bojInfo && (
-					<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-						<h2 className="text-xl font-semibold text-gray-900 mb-4">백준 정보</h2>
+					{bojInfo && (
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 							<div className="bg-gray-50 rounded-lg p-4">
 								<p className="text-sm text-gray-600 mb-1">티어</p>
@@ -163,8 +159,8 @@ export default function UserProfile() {
 								</div>
 							)}
 						</div>
-					</div>
-				)}
+					)}
+				</div>
 
 				{/* 최근 푼 문제 */}
 				{user.boj_id && (
