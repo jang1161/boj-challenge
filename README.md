@@ -1,69 +1,45 @@
-# React + TypeScript + Vite
+# 1 Solve for 1 Day - Baekjoon Challenge Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[🔗 데모 웹사이트 바로가기](https://boj-challenge.vercel.app/)
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 소개
 
-## Expanding the ESLint configuration
+**1 Solve for 1 Day**는 매일 꾸준히 문제를 푸는 습관을 돕는 백준 온라인 저지(BOJ) 챌린지 관리 웹 서비스입니다.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **그룹별 챌린지 진행 상황 추적**  
+- 팀원 간 문제 풀이 현황 및 벌칙자 자동 집계  
+- 편리한 그룹 생성 및 관리 기능  
+- 실시간으로 업데이트되는 문제 풀이 통계와 멤버 활동 내역 제공  
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+챌린지를 통해 꾸준함을 유지하고, 동기 부여를 극대화하세요!
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 기술 스택
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Frontend: React.js (React Router)  
+- Backend & DB: Supabase (PostgreSQL + Auth)  
+- 배포: Vercel  
+- 외부 API: solved.ac Open API https://github.com/solvedac/unofficial-documentation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 시작하기
+
+1. 저장소 클론  
+git clone https://github.com/yourusername/boj-challenge.git
+cd boj-challenge
+
+2. 의존성 설치  
+npm install
+
+3. 환경 변수 설정 (\`.env\`)  
+- Supabase URL 및 Key 설정  
+- 기타 필요한 API 키
+
+4. 개발 서버 실행  
+npm run dev
+
+---
