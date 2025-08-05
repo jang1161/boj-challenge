@@ -28,7 +28,7 @@ export default function GroupList({ session }) {
 	const fetchGroupsAndMemberships = async () => {
 		setLoading(true)
 
-		const { data: groupsData, error: groupsError } = await supabase.from('groups').select('*')
+		const { data: groupsData, error: groupsError } = await supabase.rpc('get_groups_with_member_count')
 		if (groupsError) {
 			alert('그룹 목록 불러오기 실패: ' + groupsError.message)
 			setLoading(false)

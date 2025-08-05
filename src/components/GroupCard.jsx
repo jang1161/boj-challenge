@@ -53,8 +53,9 @@ export default function GroupCard({ group, isJoined, isOwner, onAction, actionTe
 					)}
 					{/* 참여자 수 */}
 					<p className="text-xs text-gray-500 mt-1">
-						{group.member_count ?? 0}명 참여 중
+						{group.member_count}명 참여 중
 					</p>
+
 				</div>
 			</div>
 
