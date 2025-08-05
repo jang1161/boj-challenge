@@ -1,40 +1,67 @@
 import { createClient } from '@supabase/supabase-js'
+import fetch from 'node-fetch'
+import dotenv from 'dotenv'
 
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey)
+dotenv.config()
 
-export default async function handler(req, res) {
-  const { user } = req.query
-  if (!user) {
-    return res.status(400).json({ error: 'user query parameter is required' })
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+)
+
+async function main() {
+  console.log('[START] 오늘 푼 문제 업데이트 시작')
+
+  const { data: members, error } = await supabase
+    .from('group_members')
+    .select(`
+      user_id,
+      profiles:user_id (
+        id,
+        boj_id
+      )
+    `)
+
+  if (error) {
+    console.error('[ERROR] 멤버 불러오기 실패:', error)
+    return
   }
 
-  try {
-    // 1. /api/solved-yesterday 호출 (내부 API 호출)
-    const apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/solved-yesterday?user=${encodeURIComponent(user)}`
-    const response = await fetch(apiUrl)
-    if (!response.ok) {
-      throw new Error(`API 호출 실패: ${response.status}`)
+  for (const member of members) {
+    const userId = member.user_id
+    const bojId = member.profiles?.boj_id
+
+    if (!bojId) {
+      console.log(`[SKIP] boj_id 없음 - ${userId}`)
+      continue
     }
 
-    const data = await response.json()
-    // data.hasSolvedYesterday = true / false (예상)
+    try {
+      const res = await fetch(`https://boj-challenge.vercel.app/api/solved-yesterday?user=${encodeURIComponent(bojId)}`)
+      const data = await res.json()
 
-    // 2. supabase 프로필 업데이트
-    const { error } = await supabase
-      .from('profiles')
-      .update({ today_solved: data.hasSolvedYesterday })
-      .eq('id', user)
+      const solved = data.hasSolvedYesterday
+      console.log(`[${bojId}] 어제 풀었는지: ${solved}`)
 
-    if (error) {
-      console.error('Supabase 업데이트 에러:', error)
-      return res.status(500).json({ error: 'DB 업데이트 실패' })
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ today_solved: solved })
+        .eq('id', userId)
+
+      if (updateError) {
+        console.error(`[FAIL] DB 업데이트 실패 (${bojId}):`, updateError)
+      } else {
+        console.log(`[OK] ${bojId} → today_solved = ${solved}`)
+      }
+    } catch (err) {
+      console.error(`[ERROR] ${bojId} 처리 중 오류:`, err)
     }
 
-    return res.status(200).json({ message: 'today_solved 업데이트 완료', solved: data.hasSolvedYesterday })
-  } catch (error) {
-    console.error('에러 발생:', error)
-    return res.status(500).json({ error: error.message || '서버 에러' })
+    // 너무 빠르게 요청하면 막힐 수 있어서 약간 쉬어줌
+    await new Promise((r) => setTimeout(r, 1000))
   }
+
+  console.log('[DONE] 업데이트 완료')
 }
+
+main()
