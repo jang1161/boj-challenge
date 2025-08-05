@@ -1,4 +1,3 @@
-// components/GroupCard.jsx
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -29,7 +28,10 @@ export default function GroupCard({ group, isJoined, isOwner, onAction, actionTe
 	const iconColor = isJoined ? 'green' : 'blue'
 
 	return (
-		<div className={`flex items-center justify-between p-4 rounded-lg border transition-colors duration-200 ${getColorClasses(cardColor, 'card')} cursor-pointer hover:shadow-md`} onClick={() => navigate(`/groups/${group.id}`)}>
+		<div
+			className={`flex items-center justify-between p-4 rounded-lg border transition-colors duration-200 ${getColorClasses(cardColor, 'card')} cursor-pointer hover:shadow-md`}
+			onClick={() => navigate(`/groups/${group.id}`)}
+		>
 			<div className="flex items-center gap-3">
 				<div className={`w-10 h-10 rounded-full flex items-center justify-center ${getColorClasses(iconColor, 'icon')}`}>
 					<span className="text-white font-semibold text-sm">
@@ -45,11 +47,18 @@ export default function GroupCard({ group, isJoined, isOwner, onAction, actionTe
 							</span>
 						)}
 					</div>
+					{/* 그룹 설명 */}
 					{group.description && (
 						<p className="text-sm text-gray-600">{group.description}</p>
 					)}
+					{/* 참여자 수 */}
+					<p className="text-xs text-gray-500 mt-1">
+						{group.member_count ?? 0}명 참여 중
+					</p>
 				</div>
 			</div>
+
+			{/* 버튼 또는 상태 뱃지 */}
 			{isJoined && actionText === '탈퇴' ? (
 				<button
 					onClick={(e) => {
