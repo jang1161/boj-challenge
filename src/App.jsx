@@ -5,8 +5,8 @@ import Auth from './pages/Auth'
 import GroupList from './pages/GroupList'
 import CreateGroup from './pages/CreateGroup'
 import GroupDetail from './pages/GroupDetail'
-import ProfileForm from './pages/ProfileForm'
 import UserProfile from './pages/UserProfile'
+import ManageProfile from './pages/ManageProfile'
 
 export default function App() {
   const [session, setSession] = useState(null)
@@ -60,6 +60,9 @@ export default function App() {
           path="/users/:userId"
           element={<UserProfile />}
         />
+        // App.jsx 또는 Routes.jsx
+        <Route path="/profile" element={<ManageProfile />} />
+
       </Routes>
     </Router>
   )

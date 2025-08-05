@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import GroupCard from '../components/GroupCard'
 import GroupSection from '../components/GroupSection'
 import LoadingSpinner from '../components/LoadingSpinner'
-import Auth from './Auth'
 
 export default function GroupList({ session }) {
 	const [groups, setGroups] = useState([])
@@ -171,13 +170,10 @@ export default function GroupList({ session }) {
 						<h1 className="text-3xl font-bold text-gray-900">1 Solve for 1 Day</h1>
 						{session ? (
 							<button
-								onClick={() => {
-									supabase.auth.signOut()
-									window.location.reload()
-								}}
-								className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+								onClick={() => navigate('/profile')}
+								className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
 							>
-								로그아웃
+								프로필
 							</button>
 						) : (
 							<button

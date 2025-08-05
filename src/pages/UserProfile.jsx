@@ -118,7 +118,7 @@ export default function UserProfile() {
 					뒤로가기
 				</button>
 
-				{/* 사용자 정보 + 백준 정보  */}
+				{/* 사용자 정보, 백준 정보  */}
 				<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4">
 					<div className="flex items-center gap-4 mb-4">
 						<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
