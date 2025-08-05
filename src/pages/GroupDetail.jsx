@@ -52,7 +52,8 @@ export default function GroupDetail() {
 				user_id,
 				profiles:user_id (
 					nickname,
-          boj_id
+          boj_id,
+					avatar_url
 				)
 			`)
 			.eq('group_id', groupId)

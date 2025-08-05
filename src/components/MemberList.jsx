@@ -14,11 +14,20 @@ export default function MemberList({ members, group }) {
 						className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
 						onClick={() => navigate(`/users/${member.user_id}`)}
 					>
-						<div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-							<span className="text-blue-800 font-semibold text-xs">
-								{member.profiles?.nickname?.charAt(0).toUpperCase() || '?'}
-							</span>
-						</div>
+						{member.profiles?.avatar_url ? (
+							<img
+								src={member.profiles.avatar_url}
+								alt="프로필"
+								className="w-10 h-10 rounded-full object-cover border border-gray-300 flex-shrink-0"
+							/>
+						) : (
+							<div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+								<span className="text-blue-800 font-semibold text-xs">
+									{member.profiles?.nickname?.charAt(0).toUpperCase() || '?'}
+								</span>
+							</div>
+						)}
+
 						<div className="min-w-0 flex-1">
 							<div className="flex items-center gap-1">
 								<p className="font-medium text-gray-900 text-sm truncate">

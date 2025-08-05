@@ -171,7 +171,7 @@ export default function GroupList({ session }) {
 						{session ? (
 							<button
 								onClick={() => navigate('/profile')}
-								className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+								className="bg-sky-500 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
 							>
 								프로필
 							</button>
