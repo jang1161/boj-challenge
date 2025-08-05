@@ -37,7 +37,7 @@ async function main() {
       const res = await fetch(`https://boj-challenge.vercel.app/api/solved-yesterday?user=${encodeURIComponent(bojId)}`)
       const data = await res.json()
 
-      const solved = data.hasSolvedYesterday
+      const solved = data.solved
       console.log(`[${bojId}] 어제 풀었는지: ${solved}`)
 
       const { error: updateError } = await supabase
