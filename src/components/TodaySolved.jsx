@@ -39,32 +39,37 @@ export default function TodaySolved({ members }) {
 		<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-4">
 			<h3 className="text-xl font-semibold text-gray-900 mb-4">오늘 푼 문제</h3>
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-60 overflow-y-auto">
-				{members.map((member) => {
-					const nickname = member.profiles?.nickname || '닉네임 없음'
-					const solved = solvedMap[member.user_id]
+				{[...members]
+					.sort((a, b) => {
+						const aSolved = solvedMap[a.user_id]?.length || 0
+						const bSolved = solvedMap[b.user_id]?.length || 0
+						return bSolved - aSolved // 많이 푼 순
+					})
+					.map((member) => {
+						const nickname = member.profiles?.nickname || '닉네임 없음'
+						const solved = solvedMap[member.user_id]
 
-					return (
-						<div key={member.user_id} className="bg-gray-50 rounded p-3">
-							<div className="font-medium text-gray-900 mb-2">{nickname}</div>
-							<div className="text-sm text-gray-700">
-								{solved == null || solved.length == 0
-									? '아직 안 풀었어요'
-									: solved.map((pid) => (
-										<a
-											key={pid}
-											href={`https://www.acmicpc.net/problem/${pid}`}
-											target="_blank"
-											rel="noopener noreferrer"
-											className="inline-block text-blue-600 hover:underline mr-2 mb-1"
-										>
-											#{pid}
-										</a>
-									))
-								}
+						return (
+							<div key={member.user_id} className="bg-gray-50 rounded p-3">
+								<div className="font-medium text-gray-900 mb-2">{nickname}</div>
+								<div className="text-sm text-gray-700">
+									{solved == null || solved.length === 0
+										? '아직 안 풀었어요'
+										: solved.map((pid) => (
+											<a
+												key={pid}
+												href={`https://www.acmicpc.net/problem/${pid}`}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="inline-block text-blue-600 hover:underline mr-2 mb-1"
+											>
+												#{pid}
+											</a>
+										))}
+								</div>
 							</div>
-						</div>
-					)
-				})}
+						)
+					})}
 			</div>
 		</div>
 	)
