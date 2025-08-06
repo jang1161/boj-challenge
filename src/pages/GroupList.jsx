@@ -68,8 +68,9 @@ export default function GroupList({ session }) {
 			navigate('/login')
 			return
 		}
+
 		let inputPassword = ''
-		if (group.password) {
+		if (group.requires_password) {
 			inputPassword = prompt('비밀번호를 입력하세요')
 			if (inputPassword === null) return
 		}
@@ -98,7 +99,7 @@ export default function GroupList({ session }) {
 		if (error) {
 			alert('가입 실패: ' + error.message)
 		} else {
-			alert('가입 성공!')
+			alert('가입 완료')
 			setJoinedGroupIds(new Set([...joinedGroupIds, groupId]))
 		}
 	}
@@ -154,7 +155,7 @@ export default function GroupList({ session }) {
 		if (leaveError) {
 			alert('탈퇴 실패: ' + leaveError.message)
 		} else {
-			alert('탈퇴 성공!')
+			alert('탈퇴 완료')
 			window.location.reload()
 		}
 	}
@@ -198,7 +199,7 @@ export default function GroupList({ session }) {
 							emptyMessage=""
 							emptySubMessage=""
 						>
-							<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+							<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4">
 								{joinedGroups.map((group) => (
 									<GroupCard
 										key={group.id}
@@ -252,7 +253,7 @@ export default function GroupList({ session }) {
 						/>
 					}
 				>
-					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4">
 						{filteredGroups.map((group) => (
 							<GroupCard
 								key={group.id}
