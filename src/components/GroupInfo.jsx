@@ -8,12 +8,13 @@ export default function GroupInfo({ group, members, owner }) {
           <span className="text-gray-600">그룹원 수</span>
           <p className="font-medium">{members.length}명</p>
         </div>
-        {group.password && (
-          <div>
-            <span className="text-gray-600">비밀번호</span>
-            <p className="font-medium">설정됨</p>
-          </div>
-        )}
+        <div>
+          <span className="text-gray-600">비밀번호</span>
+          {group.password ? (
+            <p className="font-medium">설정됨</p>) 
+            : (<p className="font-medium">설정 안 됨</p>
+          )}
+        </div>
         <div>
           <span className="text-gray-600">쉬는 요일</span>
           <p className="font-medium">

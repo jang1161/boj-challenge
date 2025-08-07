@@ -47,46 +47,46 @@ export const fetchUserStats = async (bojId) => {
 export const getLevelColor = (level) => {
 	const colors = {
 		// 브론즈 (브라운/구리색 느낌)
-		1: 'text-amber-300',   // 브론즈 5
-		2: 'text-amber-400',   // 브론즈 4
-		3: 'text-amber-500',   // 브론즈 3
-		4: 'text-amber-600',   // 브론즈 2
-		5: 'text-amber-700',   // 브론즈 1
+		1: 'text-amber-800',   // 브론즈 5
+		2: 'text-amber-800',   // 브론즈 4
+		3: 'text-amber-800',   // 브론즈 3
+		4: 'text-amber-800',   // 브론즈 2
+		5: 'text-amber-800',   // 브론즈 1
 
 		// 실버 (회색/은색 느낌)
-		6: 'text-gray-300',    // 실버 5
-		7: 'text-gray-400',    // 실버 4
+		6: 'text-gray-500',    // 실버 5
+		7: 'text-gray-500',    // 실버 4
 		8: 'text-gray-500',    // 실버 3
-		9: 'text-gray-600',    // 실버 2
-		10: 'text-gray-700',   // 실버 1
+		9: 'text-gray-500',    // 실버 2
+		10: 'text-gray-500',   // 실버 1
 
 		// 골드 (노란색/금색 느낌)
-		11: 'text-yellow-400', // 골드 5
+		11: 'text-yellow-500', // 골드 5
 		12: 'text-yellow-500', // 골드 4
-		13: 'text-yellow-600', // 골드 3
-		14: 'text-yellow-700', // 골드 2
-		15: 'text-yellow-800', // 골드 1
+		13: 'text-yellow-500', // 골드 3
+		14: 'text-yellow-500', // 골드 2
+		15: 'text-yellow-500', // 골드 1
 
-		// 플래티넘 (하늘색/밝은 파랑)
-		16: 'text-cyan-400',   // 플래티넘 5
-		17: 'text-cyan-500',   // 플래티넘 4
-		18: 'text-cyan-600',   // 플래티넘 3
-		19: 'text-cyan-700',   // 플래티넘 2
-		20: 'text-cyan-800',   // 플래티넘 1
+		// 플래티넘 
+		16: 'text-emerald-300',   // 플래티넘 5
+		17: 'text-emerald-300',   // 플래티넘 4
+		18: 'text-emerald-300',   // 플래티넘 3
+		19: 'text-emerald-300',   // 플래티넘 2
+		20: 'text-emerald-300',   // 플래티넘 1
 
-		// 다이아몬드 (청록색 계열)
-		21: 'text-teal-400',   // 다이아몬드 5
-		22: 'text-teal-500',   // 다이아몬드 4
-		23: 'text-teal-600',   // 다이아몬드 3
-		24: 'text-teal-700',   // 다이아몬드 2
-		25: 'text-teal-800',   // 다이아몬드 1
+		// 다이아몬드 
+		21: 'text-cyan-300',   // 다이아몬드 5
+		22: 'text-cyan-300',   // 다이아몬드 4
+		23: 'text-cyan-300',   // 다이아몬드 3
+		24: 'text-cyan-300',   // 다이아몬드 2
+		25: 'text-cyan-300',   // 다이아몬드 1
 
 		// 루비 (빨강)
-		26: 'text-rose-400',   // 루비 5
-		27: 'text-rose-500',   // 루비 4
-		28: 'text-rose-600',   // 루비 3
+		26: 'text-rose-700',   // 루비 5
+		27: 'text-rose-700',   // 루비 4
+		28: 'text-rose-700',   // 루비 3
 		29: 'text-rose-700',   // 루비 2
-		30: 'text-rose-800',   // 루비 1
+		30: 'text-rose-700',   // 루비 1
 	};
 	return colors[level] || 'text-gray-500';
 };
