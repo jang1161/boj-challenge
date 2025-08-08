@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
   try {
     const url = `https://www.acmicpc.net/status?problem_id=&user_id=${encodeURIComponent(user)}&language_id=-1&result_id=4`;
-		const response = await fetch(url, {
+    const response = await fetch(url, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
           "(KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
@@ -21,11 +21,25 @@ export default async function handler(req, res) {
     const results = [];
     const seen = new Set();
 
+    // ✅ KST(UTC+9) 기준 오늘 시작, 내일 시작
     const now = new Date();
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const startOfTomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const kstOffset = 9 * 60 * 60 * 1000; // 9시간
+    const kstNow = new Date(now.getTime() + kstOffset);
 
-    for (let i = 1; i <= 100; i++) { // 충분히 큰 수
+    const startOfTodayKST = new Date(kstNow.getFullYear(), kstNow.getMonth(), kstNow.getDate());
+    const startOfTomorrowKST = new Date(startOfTodayKST.getTime() + 24 * 60 * 60 * 1000);
+
+    // UTC로 변환
+    const startOfTodayUTC = new Date(startOfTodayKST.getTime() - kstOffset);
+    const startOfTomorrowUTC = new Date(startOfTomorrowKST.getTime() - kstOffset);
+
+    console.log("=== 기준 시각(KST → UTC 변환) ===");
+    console.log("KST 오늘 시작:", startOfTodayKST.toISOString());
+    console.log("UTC 오늘 시작:", startOfTodayUTC.toISOString());
+    console.log("KST 내일 시작:", startOfTomorrowKST.toISOString());
+    console.log("UTC 내일 시작:", startOfTomorrowUTC.toISOString());
+
+    for (let i = 1; i <= 100; i++) {
       const row = $(`#status-table > tbody > tr:nth-child(${i})`);
       if (row.length === 0) break;
 
@@ -38,12 +52,15 @@ export default async function handler(req, res) {
       const timestamp = parseInt(timestampStr, 10) * 1000;
       const solvedDate = new Date(timestamp);
 
-      if (solvedDate < startOfToday) break;
+      // 로그 찍기
+      console.log(`Row ${i} | 문제ID: ${problemId} | timestamp: ${timestampStr} | UTC: ${solvedDate.toISOString()} | KST: ${new Date(solvedDate.getTime() + kstOffset).toISOString()}`);
 
-      if (solvedDate >= startOfToday && solvedDate < startOfTomorrow) {
+      if (solvedDate < startOfTodayUTC) break;
+
+      if (solvedDate >= startOfTodayUTC && solvedDate < startOfTomorrowUTC) {
         if (seen.has(problemId)) continue;
         seen.add(problemId);
-        results.push( problemId );
+        results.push(problemId);
 
         if (results.length >= count) break;
       }
