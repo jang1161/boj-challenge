@@ -242,12 +242,12 @@ export default function ManageProfile() {
 						>
 							로그아웃
 						</button>
-						<button
+						{/* <button
 							onClick={handleDeleteAccount}
 							className="w-full bg-red-100 text-red-700 py-2 rounded-lg hover:bg-red-200"
 						>
 							회원 탈퇴
-						</button>
+						</button> */}
 					</div>
 				</div>
 			</div>
